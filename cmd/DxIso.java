@@ -60,7 +60,7 @@ public class DxIso {
 			raf.seek(addr + 4);
 			raf.writeByte(1); //set transformation cost to default (1)
 		} */
-		long[] sklLstAddrs = {2410883084L, 2411742668L, 2412608844L, 2413549980L, 2414475500L, 2415359692L};
+        long[] sklLstAddrs = {2410878988L, 2411738572L, 2412604748L, 2413545884L, 2414471404L, 2415355596L};
 		byte[] sklLstFooter = {0x40, 0x00, 0x0A, 0x00};
 		for (long addr: sklLstAddrs) {
 			raf.seek(addr);
