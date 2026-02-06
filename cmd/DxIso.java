@@ -66,7 +66,7 @@ public class DxIso {
 			raf.seek(addr);
 			//remove Transformation tab from Raditz's costumes by adding a footer and some padding after it
 			raf.write(sklLstFooter);
-			raf.write(new byte[194]);
+			raf.write(new byte[192]);
 		}
 		writeWatermark();
 		raf.close();
