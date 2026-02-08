@@ -7,11 +7,13 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -20,13 +22,23 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.TransferHandler;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import cmd.DxIso;
+import cmd.DxPatch;
 
 public class Program {
-	static final String WINDOW_TITLE = "Bomber D'fiX";
+	static final String WINDOW_TITLE = "Bomber D'fiX v" + DxPatch.VER_NUM;
 	
+	static Font getComicSansFont() {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		String fontName = "Tahoma";
+		String[] fonts = ge.getAvailableFontFamilyNames();
+		int result = Arrays.binarySearch(fonts, "Comic Sans MS");
+		if (result >= 0) fontName = "Comic Sans MS";
+		return new Font(fontName, Font.BOLD, 30);
+	}
 	private static DxIso getIsoFromChooser(File[] lastDir, Toolkit tk) throws IOException {
 		DxIso iso = null;
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("DBZ BT2 DX Disc Image (*.ISO)", "iso");
@@ -57,13 +69,31 @@ public class Program {
 		}
 		return iso;
 	}
-	private static Font getComicSansFont() {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		String fontName = "Tahoma";
-		String[] fonts = ge.getAvailableFontFamilyNames();
-		int result = Arrays.binarySearch(fonts, "Comic Sans MS");
-		if (result >= 0) fontName = "Comic Sans MS";
-		return new Font(fontName, Font.BOLD, 30);
+	private static void checkDxIso(DxIso iso, ImageIcon[] icons, Image img, JLabel deel, JLabel quote, JFrame f, JPanel p, Toolkit tk)
+	throws IOException {
+		if (iso != null) {
+			if (iso.isValid()) {
+				deel.setIcon(icons[1]);
+				if (iso.isPatched()) {
+					quote.setForeground(Color.MAGENTA);
+					quote.setText("is patched (ver. " + iso.getPatchVersion() + ")");
+				}
+				else {
+					quote.setForeground(Color.GREEN);
+					quote.setText("is gud");
+				}
+				quote.setToolTipText(iso.toString());
+				String msg = "Should a backup/copy of the ISO be made before applying any patches?";
+				int option = JOptionPane.showConfirmDialog(p, msg, WINDOW_TITLE, JOptionPane.YES_NO_CANCEL_OPTION);
+				if (option == JOptionPane.YES_OPTION) BackupHandler.start(iso, img, f, tk);
+				else if (option == JOptionPane.NO_OPTION) Patcher.start(iso, img, f, tk);
+			}
+		}
+		else {
+			deel.setIcon(icons[0]);
+			quote.setForeground(Color.RED);
+			quote.setText("no gud");
+		}
 	}
 	private static void errorBeep(Toolkit toolkit) {
 		Runnable runWinErrorSnd = (Runnable) toolkit.getDesktopProperty("win.sound.exclamation");
@@ -72,7 +102,7 @@ public class Program {
 	private static void start() {
 		final DxIso[] iso = new DxIso[1];
 		final File[] lastDir = new File[1];
-		String[] imgDirs = { "img/angry.png", "img/blush.png", "img/flush.png"};
+		String[] imgDirs = { "img/angry.png", "img/blush.png", "img/flush.png" };
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		//set components
 		Box clockBox = Box.createHorizontalBox();
@@ -86,32 +116,44 @@ public class Program {
 			clockIcons[imgCnt] = new ImageIcon(img);
 		}
 		JLabel deel = new JLabel(clockIcons[2]);
-		JLabel deelQuote = new JLabel("pls click me 2 fix iso");
+		JLabel deelQuote = new JLabel("pls click me (or drag & drop) 2 fix iso");
 		JFrame frame = new JFrame(WINDOW_TITLE);
 		JPanel panel = new JPanel();
-		//add listener
+		//add drag and drop
+		deel.setTransferHandler(new TransferHandler() {
+			@Override
+			public boolean canImport(TransferHandler.TransferSupport ts) {
+				if (!ts.isDataFlavorSupported(DataFlavor.javaFileListFlavor))
+                    return false;
+				return true;
+			}
+			@Override
+			@SuppressWarnings("unchecked")
+			public boolean importData(TransferHandler.TransferSupport ts) {
+		        if (!canImport(ts)) return false;
+		        try {
+		        	List<File> files = (List<File>) ts.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+		        	File firstFile = files.get(0);
+			        if (firstFile.getName().toLowerCase().endsWith(".iso")) {
+			        	if (firstFile.renameTo(firstFile)) {
+			        		iso[0] = new DxIso(firstFile);
+				        	checkDxIso(iso[0], clockIcons, dxSmall, deel, deelQuote, frame, panel, toolkit);
+			        	}
+			        }
+		        } 
+		        catch (Exception ex) {
+		            return false;
+		        }
+		        return true;
+			}
+		});
+		//add mouse listener
 		deel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent me) {
 				try {
 					iso[0] = getIsoFromChooser(lastDir, toolkit);
-					if (iso[0] != null) {
-						if (iso[0].isValid()) {
-							deel.setIcon(clockIcons[1]);
-							deelQuote.setForeground(Color.GREEN);
-							deelQuote.setText("is gud");
-							deelQuote.setToolTipText(iso[0].toString());
-							String msg = "Should a backup/copy of the ISO be made before applying any patches?";
-							int option = JOptionPane.showConfirmDialog(panel, msg, WINDOW_TITLE, JOptionPane.YES_NO_CANCEL_OPTION);
-							if (option == JOptionPane.YES_OPTION) iso[0].backup();
-							if (option != JOptionPane.CANCEL_OPTION) Patcher.start(iso[0], dxSmall, frame, toolkit);
-						}
-					}
-					else {
-						deel.setIcon(clockIcons[0]);
-						deelQuote.setForeground(Color.RED);
-						deelQuote.setText("no gud");
-					}
+					checkDxIso(iso[0], clockIcons, dxSmall, deel, deelQuote, frame, panel, toolkit);
 				}
 				catch (IOException e) {
 					e.printStackTrace();
@@ -137,8 +179,8 @@ public class Program {
 		//set frame properties
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setIconImage(dxSmall);
-		frame.setSize(512, 512);
-		frame.setMinimumSize(new Dimension(512, 512));
+		frame.setSize(600, 512);
+		frame.setMinimumSize(new Dimension(600, 512));
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}

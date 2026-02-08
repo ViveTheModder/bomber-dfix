@@ -1,17 +1,18 @@
 package cmd;
 //Bomber D'fiX by ViveTheJoestar
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 public class DxIso {
-	private static final double VER_NUM = 1.0;
 	//20260202215408 was the previous build date (for v1.02)
 	private static final String ISO_BUILD_DATE = "20260205011839";
-	public static final String PATCH_WATERMARK = "BOMBER D'FIX PATCH VER. ";
+	private static final String PATCH_WATERMARK = "BOMBER D'FIX PATCH VER. ";
 	
 	private Path dir;
 	private RandomAccessFile raf;
@@ -42,6 +43,15 @@ public class DxIso {
 		String buildDate = new String(buildDateBytes);
 		return buildDate.equals(ISO_BUILD_DATE);
 	}
+	public Path getPath() {
+		return dir;
+	}
+	public String getPatchVersion() throws IOException {
+		raf.seek(33675);
+		byte[] versionBytes = new byte[3];
+		raf.read(versionBytes);
+		return new String(versionBytes);
+	}
 	public String toString() {
 		return name;
 	}
@@ -64,17 +74,34 @@ public class DxIso {
 		byte[] sklLstFooter = {0x40, 0x00, 0x0A, 0x00};
 		for (long addr: sklLstAddrs) {
 			raf.seek(addr);
-			//remove Transformation tab from Raditz's costumes by adding a footer and some padding after it
+			//Remove Transformation tab from Raditz's costumes by adding a footer and some padding after it
 			raf.write(sklLstFooter);
 			raf.write(new byte[192]);
 		}
 		writeWatermark();
-		raf.close();
 	}
-	
+	public void fixItemNames() throws IOException {
+		int[] pakAddrs = {16539648, 38950912}, ogSizes = {1551632, 765072}, newSizes = {1551584, 765024};
+		String[] fileNames = { "0_DragonTournamentMenu.pak", "1_DragonAdventureResults.cpak" };
+		for (int pakCnt = 0; pakCnt < pakAddrs.length; pakCnt++) {
+			byte[] pakBytes = new byte[newSizes[pakCnt]];
+			InputStream stream = DxIso.class.getResourceAsStream("/patch/1/"+fileNames[pakCnt]);
+			DataInputStream pakStream = new DataInputStream(stream);
+			pakStream.readFully(pakBytes);
+			pakStream.close();
+			raf.seek(pakAddrs[pakCnt]);
+			raf.write(pakBytes);
+			raf.write(new byte[ogSizes[pakCnt] - newSizes[pakCnt]]);
+		}
+		//More of a bonus fix, but this fixes the narrator's text to say Paragus instead of Paragas
+		raf.seek(10682586);
+		raf.write('u');
+		writeWatermark();
+	}
 	private void writeWatermark() throws IOException {
 		raf.seek(33651);
-		String watermark = PATCH_WATERMARK + "" + VER_NUM + "";
+		String watermark = PATCH_WATERMARK + "" + DxPatch.VER_NUM + "";
 		raf.write(watermark.getBytes());
+		raf.close();
 	}
 }

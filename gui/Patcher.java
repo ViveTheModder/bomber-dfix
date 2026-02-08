@@ -24,6 +24,8 @@ import cmd.DxIso;
 import cmd.DxPatch;
 
 public class Patcher {
+	private static final String HTML_START = "<html><div style='text-align: center;'>";
+	private static final String HTML_END = "</html></div>";
 	public static void start(DxIso iso, Image icon, JFrame prevFrame, Toolkit tk) {
 		//set components
 		Color bgColor = new Color(1, 54, 106);
@@ -39,7 +41,7 @@ public class Patcher {
 			chkbxs[patchCnt].setBackground(bgColor);
 			chkbxs[patchCnt].setForeground(Color.WHITE);
 			chkbxs[patchCnt].setFont(tahoma);
-			chkbxs[patchCnt].setToolTipText(DxPatch.getPatchTooltip(patchCnt));
+			chkbxs[patchCnt].setToolTipText(HTML_START + DxPatch.getPatchTooltip(patchCnt) + HTML_END);
 			chkbxs[patchCnt].addFocusListener(new FocusListener() {
 				@Override
 				public void focusGained(FocusEvent e) {
@@ -64,7 +66,8 @@ public class Patcher {
 				for (int patchCnt = 0; patchCnt < chkbxs.length; patchCnt++) {
 					if (chkbxs[patchCnt].isSelected()) {
 						selPatches++;
-						new DxPatch(iso, patchCnt);
+						DxIso newIso = new DxIso(iso.getPath().toFile());
+						new DxPatch(newIso, patchCnt);
 					}
 				}
 				long end = System.currentTimeMillis();
