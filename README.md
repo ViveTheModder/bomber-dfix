@@ -3,8 +3,29 @@ A patcher for [Deelseton](https://www.youtube.com/@Deelseton)'s [DBZ BT2 DX](htt
 
 Similar to [the one I wrote for DBZ Sparking! HYPER](https://github.com/ViveTheModder/dbzs-hyper-patcher), though without command-line support and instead with more silliness (hence why it looks so unprofessional).
 
+As of v2.0, the tool performs the following:
+* Removes any mention of Raditz's Great Ape transformation from his skill list.
+* Removes excess space from the Son of Paragus and Breakthrough the limit Z-Items,
+specifically for the results screen of Dragon History and the character select in Dragon Tournament.
+* Rearranges Goku (End) and Goten's positions in the roster so that
+if Gotenks, Gogeta or Vegito are selected in Dragon Adventure
+and then Evolution Z (to customize them), 
+the displayed character will no longer point
+to Vegeta (End) or Goku (Early).
+* Master Roshi and Yajirobe have also been rearranged,
+alongside Mecha Frieza, Cooler, Meta-Cooler and Android #13,
+in order to prevent issues caused by
+misplacement of the Random & Password character slots.
+* To prevent confusion, the 2nd Lower class Saiyan Z-Item has
+been renamed to Half-Saiyan Energy.
+* In addition, Vegeta's name is properly set to Vegeta (End)
+for Ultimate Battle Z and Dragon Tournament.
+* Instead of the early damaged costume (no. 6), Piccolo will use his 2nd costume (the one with the cape).
+* Makes GT Goku's Dragon Fist (base form) able to work against giant characters.
+
 # Demonstration
 Upon execution, the user needs to **click on** the *Deelmoji* (yes, that is what I am calling it) **for a file chooser to show up**.
+
 <img width="496" height="504" alt="image" src="https://github.com/user-attachments/assets/5887f330-991b-4c97-8ba9-f2021fc0c569" />
 
 <img width="1159" height="574" alt="image" src="https://github.com/user-attachments/assets/e91cbec1-6245-416c-b441-b27f37e14098" />
