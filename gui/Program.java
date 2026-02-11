@@ -137,8 +137,23 @@ public class Program {
 			        if (firstFile.getName().toLowerCase().endsWith(".iso")) {
 			        	if (firstFile.renameTo(firstFile)) {
 			        		iso[0] = new DxIso(firstFile);
-				        	checkDxIso(iso[0], clockIcons, dxSmall, deel, deelQuote, frame, panel, toolkit);
+			        		if (iso[0].isValid()) checkDxIso(iso[0], clockIcons, dxSmall, deel, deelQuote, frame, panel, toolkit);
+			        		else {
+								String err = "The selected ISO is NOT a valid DBZ BT2 DX ISO!";
+								errorBeep(toolkit);
+								JOptionPane.showMessageDialog(frame, err, WINDOW_TITLE, JOptionPane.ERROR_MESSAGE);
+					        }
 			        	}
+			        	else {
+							String err = "The selected ISO is being used by another process. Close the process and try again!";
+							errorBeep(toolkit);
+							JOptionPane.showMessageDialog(frame, err, WINDOW_TITLE, JOptionPane.ERROR_MESSAGE);
+			        	}
+			        }
+			        else {
+						String err = "The selected ISO is NOT a DBZ BT2 DX ISO!";
+						errorBeep(toolkit);
+						JOptionPane.showMessageDialog(frame, err, WINDOW_TITLE, JOptionPane.ERROR_MESSAGE);
 			        }
 		        } 
 		        catch (Exception ex) {

@@ -14,12 +14,14 @@ public class DxIso {
 	private static final String ISO_BUILD_DATE = "20260205011839";
 	private static final String PATCH_WATERMARK = "BOMBER D'FIX PATCH VER. ";
 	
+	private DxPatchInfo[] info;
 	private Path dir;
 	private RandomAccessFile raf;
 	private String name;
 	
 	public DxIso(File iso) {
 		try {
+			info = DxPatch.getAllPatchInfo();
 			dir = iso.toPath();
 			raf = new RandomAccessFile(iso, "rw");
 			name = iso.getName();
@@ -43,6 +45,17 @@ public class DxIso {
 		String buildDate = new String(buildDateBytes);
 		return buildDate.equals(ISO_BUILD_DATE);
 	}
+	public double backup() throws IOException {
+		long start = System.currentTimeMillis();
+		Path newDir = dir.getParent().resolve(name.replace(".iso", ".bak"));
+		File newIso = newDir.toFile();
+		if (newIso.exists()) newIso.delete();
+		Files.copy(dir, newDir, StandardCopyOption.COPY_ATTRIBUTES);
+		long end = System.currentTimeMillis();
+		double time = (end - start) / 1000.0;
+		long isoSize = (newIso.length() / 1024) / 1024;
+		return isoSize / time;
+	}
 	public Path getPath() {
 		return dir;
 	}
@@ -54,12 +67,6 @@ public class DxIso {
 	}
 	public String toString() {
 		return name;
-	}
-	public void backup() throws IOException {
-		Path newDir = dir.getParent().resolve(name.replace(".iso", ".bak"));
-		File newIso = newDir.toFile();
-		if (newIso.exists()) newIso.delete();
-		Files.copy(dir, newDir, StandardCopyOption.COPY_ATTRIBUTES);
 	}
 	public void disableGreatApeForm() throws IOException {
 		/* As of v1.04, Turles has already had his transformation disabled, so this code is useless
@@ -80,23 +87,49 @@ public class DxIso {
 		}
 		writeWatermark();
 	}
-	public void fixItemNames() throws IOException {
-		int[] pakAddrs = {16539648, 38950912}, ogSizes = {1551632, 765072}, newSizes = {1551584, 765024};
-		String[] fileNames = { "0_DragonTournamentMenu.pak", "1_DragonAdventureResults.cpak" };
-		for (int pakCnt = 0; pakCnt < pakAddrs.length; pakCnt++) {
-			byte[] pakBytes = new byte[newSizes[pakCnt]];
-			InputStream stream = DxIso.class.getResourceAsStream("/patch/1/"+fileNames[pakCnt]);
-			DataInputStream pakStream = new DataInputStream(stream);
-			pakStream.readFully(pakBytes);
-			pakStream.close();
-			raf.seek(pakAddrs[pakCnt]);
-			raf.write(pakBytes);
-			raf.write(new byte[ogSizes[pakCnt] - newSizes[pakCnt]]);
+	public void enableDragonFistAgainstGiants() throws Exception {
+		byte[] dragonFistParams = {-118, 17}; //likely flags (sets of boolean parameters)
+		long[] blastParamAddrs = { 2909059877L, 2910006757L, 2910907125L};
+		for (long addr: blastParamAddrs) {
+			raf.seek(addr);
+			raf.write(dragonFistParams);
+		}
+		writeWatermark();
+	}
+	public void fixCharaRoster() throws Exception {
+		int numFilesOfPrevPatch = DxPatch.getNumPatchFiles(info, 1);
+		int numFilesOfCurrPatch = DxPatch.getNumPatchFiles(info, 2);
+		for (int i = numFilesOfPrevPatch; i < numFilesOfCurrPatch + numFilesOfPrevPatch; i++)
+			writePatchFromPak(info[i].getName(), info[i].getPnum(), info[i].getAddr(), info[i].getOldSize(), info[i].getNewSize());
+	}
+	public void fixItemNames() throws Exception {
+		String verNum = getPatchVersion();
+		//This patch conflicts with the patch from v1.2, so this check had to be added
+		if (Float.parseFloat(verNum) < 1.2) {
+			for (int i = 0; i < DxPatch.getNumPatchFiles(info, 1); i++)
+				writePatchFromPak(info[i].getName(), info[i].getPnum(), info[i].getAddr(), info[i].getOldSize(), info[i].getNewSize());
 		}
 		//More of a bonus fix, but this fixes the narrator's text to say Paragus instead of Paragas
 		raf.seek(10682586);
 		raf.write('u');
 		writeWatermark();
+	}
+	public void fixPiccoloCostume() throws IOException {
+		raf.seek(9313732);
+		raf.write(8); //Move costume ID by 4 slots ("04 AD" -> "08 AD")
+		writeWatermark();
+	}
+	
+	private void writePatchFromPak(String fileName, int patchIdx, int pakAddr, int oldSize, int newSize) throws Exception {
+		byte[] pakBytes = new byte[newSize];
+		InputStream stream = DxIso.class.getResourceAsStream("/patch/" + patchIdx + "/" + fileName);
+		DataInputStream pakStream = new DataInputStream(stream);
+		pakStream.readFully(pakBytes);
+		pakStream.close();
+		raf.seek(pakAddr);
+		raf.write(pakBytes);
+		int paddingSize = oldSize - newSize;
+		if (paddingSize > 0) raf.write(new byte[paddingSize]);
 	}
 	private void writeWatermark() throws IOException {
 		raf.seek(33651);

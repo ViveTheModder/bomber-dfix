@@ -80,10 +80,10 @@ public class BackupHandler {
 		SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				iso.backup();
+				double avgSpeed = iso.backup();
 				timer.stop();
 				tk.beep();
-				String msg = "Backup completed!";
+				String msg = "Backup completed! (Average Speed: " + String.format("%.3f", avgSpeed) + " MiB/s)";
 				JOptionPane.showMessageDialog(dialog, msg, Program.WINDOW_TITLE, JOptionPane.INFORMATION_MESSAGE);
 				dialog.dispose();
 				Patcher.start(iso, icon, prevFrame, tk);
