@@ -20,6 +20,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import cmd.DxIso;
 import cmd.DxPatch;
 
@@ -28,12 +31,15 @@ public class Patcher {
 	private static final String HTML_END = "</html></div>";
 	public static void start(DxIso iso, Image icon, JFrame prevFrame, Toolkit tk) {
 		//set components
+		Box selectAllBox = Box.createHorizontalBox();
 		Color bgColor = new Color(1, 54, 106);
 		Color btnColor = new Color(150, 94, 182);
 		Color fgColor = new Color(255, 217, 1);
 		Color focusColor = new Color(84, 155, 0);
+		Font selectFont = new Font("Tahoma", Font.BOLD, 20);
 		Font tahoma = new Font("Tahoma", Font.PLAIN, 15);
 		Font tahomaBold = new Font("Tahoma", Font.BOLD, 30);
+		JCheckBox selectAll = new JCheckBox("Select All");
 		JCheckBox[] chkbxs = new JCheckBox[DxPatch.NUM_PATCHES];
 		for (int patchCnt = 0; patchCnt < chkbxs.length; patchCnt++) {
 			final int index = patchCnt;
@@ -86,6 +92,19 @@ public class Patcher {
 				dialog.dispose();
 			}
 		});
+		selectAll.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				if (selectAll.isSelected()) {
+					for (int patchCnt = 0; patchCnt < chkbxs.length; patchCnt++)
+						chkbxs[patchCnt].setSelected(true);
+				}
+				else {
+					for (int patchCnt = 0; patchCnt < chkbxs.length; patchCnt++)
+						chkbxs[patchCnt].setSelected(false);
+				}
+			}
+		});
 		//set component properties
 		btn.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		btn.setBackground(btnColor);
@@ -97,11 +116,17 @@ public class Patcher {
 		panel.setBackground(bgColor);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		prevFrame.setEnabled(false);
+		selectAll.setBackground(bgColor);
+		selectAll.setForeground(fgColor);
+		selectAll.setFont(selectFont);
 		title.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		title.setForeground(fgColor);
 		title.setFont(tahomaBold);
 		title.setHorizontalAlignment(JLabel.HORIZONTAL);
 		//add components
+		selectAllBox.add(Box.createVerticalGlue());
+		selectAllBox.add(selectAll);
+		selectAllBox.add(Box.createVerticalGlue());
 		panel.add(Box.createVerticalGlue());
 		panel.add(title);
 		panel.add(new JLabel(" "));
@@ -112,6 +137,7 @@ public class Patcher {
 			patchBox.add(Box.createHorizontalGlue());
 			panel.add(patchBox);
 		}
+		panel.add(selectAllBox);
 		panel.add(new JLabel(" "));
 		panel.add(btn);
 		panel.add(Box.createVerticalGlue());
@@ -119,9 +145,9 @@ public class Patcher {
 		//set dialog properties
 		dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		dialog.setIconImage(icon);
-		dialog.setMinimumSize(new Dimension(384, 512));
-		dialog.setSize(384, 512);
-		dialog.setLocation(prevFrame.getX() + 512, prevFrame.getY());
+		dialog.setMinimumSize(new Dimension(512, 512));
+		dialog.setSize(512, 512);
+		dialog.setLocation(prevFrame.getX() + 600, prevFrame.getY());
 		dialog.setTitle(Program.WINDOW_TITLE);
 		dialog.setVisible(true);
 	}

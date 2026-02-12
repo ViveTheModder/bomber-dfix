@@ -77,24 +77,22 @@ public class DxIso {
 			raf.seek(addr + 4);
 			raf.writeByte(1); //set transformation cost to default (1)
 		} */
-        long[] sklLstAddrs = {2410878988L, 2411738572L, 2412604748L, 2413545884L, 2414471404L, 2415355596L};
-		byte[] sklLstFooter = {0x40, 0x00, 0x0A, 0x00};
+        long[] sklLstAddrs = { 2410878988L, 2411738572L, 2412604748L, 2413545884L, 2414471404L, 2415355596L };
+		byte[] sklLstFooter = { 0x40, 0x00, 0x0A, 0x00 };
 		for (long addr: sklLstAddrs) {
 			raf.seek(addr);
 			//Remove Transformation tab from Raditz's costumes by adding a footer and some padding after it
 			raf.write(sklLstFooter);
 			raf.write(new byte[192]);
 		}
-		writeWatermark();
 	}
 	public void enableDragonFistAgainstGiants() throws Exception {
 		byte[] dragonFistParams = {-118, 17}; //likely flags (sets of boolean parameters)
-		long[] blastParamAddrs = { 2909059877L, 2910006757L, 2910907125L};
+		long[] blastParamAddrs = { 2909059877L, 2910006757L, 2910907125L };
 		for (long addr: blastParamAddrs) {
 			raf.seek(addr);
 			raf.write(dragonFistParams);
 		}
-		writeWatermark();
 	}
 	public void fixCharaRoster() throws Exception {
 		int numFilesOfPrevPatch = DxPatch.getNumPatchFiles(info, 1);
@@ -112,12 +110,72 @@ public class DxIso {
 		//More of a bonus fix, but this fixes the narrator's text to say Paragus instead of Paragas
 		raf.seek(10682586);
 		raf.write('u');
-		writeWatermark();
 	}
 	public void fixPiccoloCostume() throws IOException {
 		raf.seek(9313732);
 		raf.write(8); //Move costume ID by 4 slots ("04 AD" -> "08 AD")
-		writeWatermark();
+	}
+	public void fixSpecialQuotes() throws IOException {
+		long[] krillinAddrs = { 2385862232L, 2386705784L, 2387616056L, 2388515432L, 2389311960L, 2390190456L };
+		long[] trunksAddrs = { 
+			2811903576L, 2812789432L, 2813719512L, 2814577704L, 2815523144L, 2816430920L,
+			2818707656L, 2819607432L, 2820533768L, 2821349992L, 2822262664L, 2823158920L
+		};
+		long[] cellAddrs = { 2590651480L, 2591476824L, 2595587160L, 2596407496L };
+		byte[] krillinSpeakerParams = { 0x59, 0, 1, 0 };
+		byte[] trunksSpeakerParams = { 0x5B, 0, 0, 0};
+		byte[] cellSpeakerParams = { 8, 0, 1, 0 }; 
+		int totalNumAddrs = krillinAddrs.length + trunksAddrs.length + cellAddrs.length;
+		for (int i = 0; i < totalNumAddrs; i++) {
+			if (i >= krillinAddrs.length + trunksAddrs.length) {
+				raf.seek(cellAddrs[i - (krillinAddrs.length + trunksAddrs.length)]);
+				raf.write(cellSpeakerParams);
+				raf.seek(cellAddrs[i - (krillinAddrs.length + trunksAddrs.length)] + 8);
+				raf.write(cellSpeakerParams);
+			}
+			else if (i >= krillinAddrs.length) {
+				raf.seek(trunksAddrs[i - krillinAddrs.length] + 8);				
+				raf.write(trunksSpeakerParams);
+			}
+			else {
+				raf.seek(krillinAddrs[i]);
+				raf.write(krillinSpeakerParams);
+			}
+		}
+	}
+	public void rebalanceWildSense() throws IOException {
+		long[] sklLstAddrs = {
+			//Goku (End) - Super Saiyan
+			2332219296L, 2333163456L, 2334091168L, 2335019792L, 2335951360L, 2336905920L,
+			//Ultimate Gohan
+			2638444576L, 2639358736L, 2640166144L, 2640826528L, 2641668640L, /*2641664736L*/ 2642531872L,
+			//Gogeta - Super Saiyan 4
+			2787637200L, 2788566992L,
+			//Omega Shenron
+			3016709312L, 3017630912L
+		};
+		long[] blastParamAddrs = {
+			//Ultimate Gohan
+			2638436200L, 2639355992L, 2640163400L, 2640823784L, 2641637416L, 2642529128L,
+			//Gogeta - Super Saiyan 4
+			2787613720L, 2788543512L,
+			//Omega Shenron
+			3016701448L, 3017623048L
+		};
+		for (long addr: sklLstAddrs) {
+			raf.seek(addr);
+			raf.write('2');
+		}
+		for (long addr: blastParamAddrs) {
+			raf.seek(addr);
+			raf.write(2);
+		}
+	}
+	void writeWatermark() throws IOException {
+		raf.seek(33651);
+		String watermark = PATCH_WATERMARK + "" + DxPatch.VER_NUM + "";
+		raf.write(watermark.getBytes());
+		raf.close();
 	}
 	
 	private void writePatchFromPak(String fileName, int patchIdx, int pakAddr, int oldSize, int newSize) throws Exception {
@@ -130,11 +188,5 @@ public class DxIso {
 		raf.write(pakBytes);
 		int paddingSize = oldSize - newSize;
 		if (paddingSize > 0) raf.write(new byte[paddingSize]);
-	}
-	private void writeWatermark() throws IOException {
-		raf.seek(33651);
-		String watermark = PATCH_WATERMARK + "" + DxPatch.VER_NUM + "";
-		raf.write(watermark.getBytes());
-		raf.close();
 	}
 }

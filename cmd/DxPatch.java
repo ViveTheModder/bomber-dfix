@@ -9,11 +9,13 @@ import java.util.Scanner;
 
 public class DxPatch {
 	private static final String[] PATCH_NAMES = {
-		"Remove Raditz Transformation Tab",
-		"Fix Overlapping Z-Item Names",
-		"Fix Character Roster Bugs",
-		"Fix Invalid Costume for Piccolo in Buu Saga",
-		"Enable Giant-Piercing Ability for GT Goku Dragon Fist"
+		"Remove Raditz Transformation Tab (06/02/26)",
+		"Fix Overlapping Z-Item Names (08/02/26)",
+		"Fix Character Roster Bugs (11/02/26)",
+		"Fix Invalid Costume for Piccolo in Buu Saga (11/02/26)",
+		"Enable Giant-Piercing Ability for GT Goku Dragon Fist (11/02/26)",
+		"Correct Wild Sense Cost (12/02/26)",
+		"Fix Missing Special Quote Voice Lines (12/02/26)"
 	};
 	private static final String[] PATCH_TIPS = {
 		"Removes any mention of Raditz's Great Ape transformation from his skill list.",
@@ -28,9 +30,15 @@ public class DxPatch {
 		+ "In addition, Vegeta's name is properly set to Vegeta (End)<br>for Ultimate Battle Z and Dragon Tournament.<br><br>"
 		+ "This patch affects all gamemodes with character selection/customization.",
 		"Instead of the early damaged costume (no. 6), Piccolo will use his 2nd costume (the one with the cape).",
-		"Makes GT Goku's Dragon Fist (base form) able to work against giant characters."
+		"Makes GT Goku's Dragon Fist (base form) able to work against giant characters.",
+		"Changes the cost of Wild Sense from 3 to 2 for the following characters:<br>"
+		+ "* Goku (End) - Super Saiyan<br>"
+		+ "* Ultimate Gohan<br>"
+		+ "* Gogeta - Super Saiyan 4<br>"
+		+ "* Omega Shenron",
+		"Restores Krillin and Perfect Cell's missing interaction<br>voice lines against Vegeta (Early) and Future Trunks."
 	};
-	public static final double VER_NUM = 2.0;
+	public static final double VER_NUM = 3.0;
 	public static final int NUM_PATCHES = PATCH_NAMES.length;
 	private static final int NUM_PATCH_FILES = 11;
 	
@@ -42,8 +50,11 @@ public class DxPatch {
 				case 2: iso.fixCharaRoster(); break;
 				case 3: iso.fixPiccoloCostume(); break;
 				case 4: iso.enableDragonFistAgainstGiants(); break;
+				case 5: iso.rebalanceWildSense(); break;
+				case 6: iso.fixSpecialQuotes(); break;
 				default: break;
 			}
+			iso.writeWatermark();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
