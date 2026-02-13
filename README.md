@@ -19,7 +19,7 @@ been **renamed to Half-Saiyan Energy**.
 * In addition, Vegeta's name is **properly set to Vegeta (End) for Ultimate Battle Z and Dragon Tournament**.
 * Instead of the early damaged costume (no. 6), Piccolo will use **his 2nd costume** (the one **with the cape**).
 * Makes GT Goku's Dragon Fist (base form) **able to work against giant characters**.
-* Changes the cost of **Wild Sense from 3 to 2** for Goku (End) - Super Saiyan, Ultimate Gohan, Gogeta - Super Saiyan 4, Omega Shenron.
+* Changes the cost of **Wild Sense from 3 to 2** for Goku (End) - Super Saiyan, Ultimate Gohan, Gogeta (GT) - Super Saiyan 4, Omega Shenron.
 * Restores Krillin and Perfect Cell's **missing interaction voice lines** against Vegeta (Early) and Future Trunks.
 
 # Demonstration (v1.0)
@@ -53,7 +53,7 @@ The tool will **only apply changes from patches checked** by the user. Future pa
 
 <img width="930" height="548" alt="image" src="https://github.com/user-attachments/assets/02c4020b-80d1-41a5-b759-81e227457121" />
 
-# Results (v2.0)
+# Results (v3.0)
 ## Remove Raditz Transformation Tab
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f57fdea8-c4aa-403d-8ae8-589c690f8e2c" />
 
@@ -92,3 +92,12 @@ The tool will **only apply changes from patches checked** by the user. Future pa
 
 ## Enable Giant-Piercing Ability for GT Goku Dragon Fist
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/0ca415bf-8385-4944-ad80-06886dd0d67e" />
+
+## Correct Wild Sense Cost
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/90061e14-8cc0-484a-85a8-5190e68cf383" />
+
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/71245f66-2a55-4f81-8f1e-6a7268410d0f" />
+
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/b160a638-93e2-40e0-aecf-8c60b64eb08d" />
+
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/e3d66317-f15d-4712-84eb-e60b931a3acd" />
