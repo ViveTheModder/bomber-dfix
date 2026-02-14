@@ -11,6 +11,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -88,8 +90,14 @@ public class Patcher {
 		dialog.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent we) {
-				prevFrame.setEnabled(true);
-				dialog.dispose();
+				try {
+					prevFrame.setEnabled(true);
+					iso.close();
+					dialog.dispose();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		selectAll.addChangeListener(new ChangeListener() {

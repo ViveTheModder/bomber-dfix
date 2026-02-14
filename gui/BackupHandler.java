@@ -69,6 +69,7 @@ public class BackupHandler {
 		panel.add(Box.createVerticalGlue());
 		dialog.add(panel);
 		//set dialog properties
+		dialog.setAlwaysOnTop(true);
 		dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		dialog.setIconImage(icon);
 		dialog.setMinimumSize(new Dimension(576, 384));

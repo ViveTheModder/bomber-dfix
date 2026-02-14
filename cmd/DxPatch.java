@@ -15,7 +15,10 @@ public class DxPatch {
 		"Fix Invalid Costume for Piccolo in Buu Saga (11/02/26)",
 		"Enable Giant-Piercing Ability for GT Goku Dragon Fist (11/02/26)",
 		"Correct Wild Sense Cost (12/02/26)",
-		"Fix Missing Special Quote Voice Lines (12/02/26)"
+		"Fix Missing Special Quote Voice Lines (12/02/26, 14/02/26)",
+		"Correct Super Unyielding Spirit Cost (14/02/26)",
+		"Correct Lord Slug's Blast 2 SFX (14/02/26)",
+		"Disable Hardcoded Demo Fight Changes (14/02/26)"
 	};
 	private static final String[] PATCH_TIPS = {
 		"Removes any mention of Raditz's Great Ape transformation from his skill list.",
@@ -34,13 +37,24 @@ public class DxPatch {
 		"Changes the cost of Wild Sense from 3 to 2 for the following characters:<br>"
 		+ "* Goku (End) - Super Saiyan<br>"
 		+ "* Ultimate Gohan<br>"
-		+ "* Gogeta - Super Saiyan 4<br>"
+		+ "* Gogeta (GT) - Super Saiyan 4<br>"
 		+ "* Omega Shenron",
-		"Restores Krillin and Perfect Cell's missing interaction<br>voice lines against Vegeta (Early) and Future Trunks."
+		"Restores Krillin, Perfect Cell and Syn/Omega Shenron's missing interaction<br>"
+		+ "voice lines against Vegeta (Early), Future Trunks and Goku (GT).",
+		"Changes Android #18's Super Unyielding Spirit cost from 3 Blast Stocks to 2.",
+		"Replaces Lord Slug's Blast 2 sound effects with more fitting ones.",
+		"Prevents the game's menu code (DBZP.BIN) from changing the characters of the following fights:<br>"
+		+ "* Goku (Mid) - Super Saiyan vs. Frieza - Full Power<br>"
+		+ "* Teen Gohan - Super Saiyan vs. Cell - Perfect<br>"
+		+ "* Krillin vs. Zangya<br><br>"
+		+ "Without this patch, the code will replace the fights above with the fights below:<br>"
+		+ "* Bardock vs. Frieza - 1st Form<br>"
+		+ "* Teen Gohan - Super Saiyan 2 vs. Super Perfect Cell<br>"
+		+ "* Future Trunks (Sword) - Super Saiyan vs. Zangya<br>"
 	};
-	public static final double VER_NUM = 3.0;
+	public static final double VER_NUM = 3.3;
 	public static final int NUM_PATCHES = PATCH_NAMES.length;
-	private static final int NUM_PATCH_FILES = 11;
+	private static final int NUM_PATCH_FILES = 13;
 	
 	public DxPatch(DxIso iso, int patchIdx) {
 		try {
@@ -52,6 +66,9 @@ public class DxPatch {
 				case 4: iso.enableDragonFistAgainstGiants(); break;
 				case 5: iso.rebalanceWildSense(); break;
 				case 6: iso.fixSpecialQuotes(); break;
+				case 7: iso.rebalanceA18(); break;
+				case 8: iso.fixLordSlugSounds(); break;
+				case 9: iso.disableDbzpChanges(); break;
 				default: break;
 			}
 			iso.writeWatermark();
@@ -81,7 +98,7 @@ public class DxPatch {
 			String line = sc.nextLine();
 			String[] lineArray = line.split(",");
 			int patchNum = Integer.parseInt(lineArray[0]);
-			int patchAddr = Integer.parseInt(lineArray[2]);
+			long patchAddr = Long.parseUnsignedLong(lineArray[2]);
 			int patchSizeOld = Integer.parseInt(lineArray[3]);
 			int patchSizeNew = Integer.parseInt(lineArray[4]);
 			infoArray[cnt] = new DxPatchInfo(patchNum, patchAddr, patchSizeOld, patchSizeNew, lineArray[1]);

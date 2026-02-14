@@ -68,6 +68,21 @@ public class DxIso {
 	public String toString() {
 		return name;
 	}
+	public void close() throws IOException {
+		raf.close();
+	}
+	public void disableDbzpChanges() throws Exception {
+		int pos = 3324236;
+		raf.seek(pos);
+		raf.write(-3);
+		raf.seek(pos += 20);
+		raf.write(-2);
+		raf.seek(pos += 4);
+		raf.write(-1);
+		//By mistake, Deel set Goku (Mid)'s costume to 4 rather than 5, so a new Main Menu PAK is needed
+		int i = DxPatch.getNumPatchFiles(info, 1) + DxPatch.getNumPatchFiles(info, 2) + DxPatch.getNumPatchFiles(info, 3);
+		writePatchFromPak(info[i].getName(), info[i].getPnum(), info[i].getAddr(), info[i].getOldSize(), info[i].getNewSize());
+	}
 	public void disableGreatApeForm() throws IOException {
 		/* As of v1.04, Turles has already had his transformation disabled, so this code is useless
 		long[] commonParamAddrs = {3034040384L, 3034939072L, 3035522048L, 3036105728L, 3036689408L, 3037273088L};
@@ -111,6 +126,12 @@ public class DxIso {
 		raf.seek(10682586);
 		raf.write('u');
 	}
+	public void fixLordSlugSounds() throws Exception {
+		int start = DxPatch.getNumPatchFiles(info, 1) + DxPatch.getNumPatchFiles(info, 2);
+		int end = start + 2;
+		for (int i = start; i < end; i++)
+			writePatchFromPak(info[i].getName(), info[i].getPnum(), info[i].getAddr(), info[i].getOldSize(), info[i].getNewSize());
+	}
 	public void fixPiccoloCostume() throws IOException {
 		raf.seek(9313732);
 		raf.write(8); //Move costume ID by 4 slots ("04 AD" -> "08 AD")
@@ -122,15 +143,22 @@ public class DxIso {
 			2818707656L, 2819607432L, 2820533768L, 2821349992L, 2822262664L, 2823158920L
 		};
 		long[] cellAddrs = { 2590651480L, 2591476824L, 2595587160L, 2596407496L };
+		long[] synAddrs = { 3011043024L, 3011952336L, 3016700112L, 3017621712L }; 
 		byte[] krillinSpeakerParams = { 0x59, 0, 1, 0 };
 		byte[] trunksSpeakerParams = { 0x5B, 0, 0, 0};
 		byte[] cellSpeakerParams = { 8, 0, 1, 0 }; 
-		int totalNumAddrs = krillinAddrs.length + trunksAddrs.length + cellAddrs.length;
+		int totalNumAddrs = krillinAddrs.length + trunksAddrs.length + cellAddrs.length + synAddrs.length;
+		int startIndexSyn = krillinAddrs.length + trunksAddrs.length + cellAddrs.length;
+		int startIndexCell = krillinAddrs.length + trunksAddrs.length;
 		for (int i = 0; i < totalNumAddrs; i++) {
-			if (i >= krillinAddrs.length + trunksAddrs.length) {
-				raf.seek(cellAddrs[i - (krillinAddrs.length + trunksAddrs.length)]);
+			if (i >= startIndexSyn) {
+				raf.seek(synAddrs[i - startIndexSyn]);
+				raf.write(new byte[6]);
+			}
+			else if (i >= startIndexCell) {
+				raf.seek(cellAddrs[i - startIndexCell]);
 				raf.write(cellSpeakerParams);
-				raf.seek(cellAddrs[i - (krillinAddrs.length + trunksAddrs.length)] + 8);
+				raf.seek(cellAddrs[i - startIndexCell] + 8);
 				raf.write(cellSpeakerParams);
 			}
 			else if (i >= krillinAddrs.length) {
@@ -141,6 +169,13 @@ public class DxIso {
 				raf.seek(krillinAddrs[i]);
 				raf.write(krillinSpeakerParams);
 			}
+		}
+	}
+	public void rebalanceA18() throws IOException {
+		long[] blastParamAddrs = { 2562378636L, 2563244204L, 2564158732L, 2564982988L, 2565958412L, 2566812012L };
+		for (long addr: blastParamAddrs) {
+			raf.seek(addr);
+			raf.write(2);
 		}
 	}
 	public void rebalanceWildSense() throws IOException {
@@ -178,7 +213,7 @@ public class DxIso {
 		raf.close();
 	}
 	
-	private void writePatchFromPak(String fileName, int patchIdx, int pakAddr, int oldSize, int newSize) throws Exception {
+	private void writePatchFromPak(String fileName, int patchIdx, long pakAddr, int oldSize, int newSize) throws Exception {
 		byte[] pakBytes = new byte[newSize];
 		InputStream stream = DxIso.class.getResourceAsStream("/patch/" + patchIdx + "/" + fileName);
 		DataInputStream pakStream = new DataInputStream(stream);
