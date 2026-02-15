@@ -18,7 +18,8 @@ public class DxPatch {
 		"Fix Missing Special Quote Voice Lines (12/02/26, 14/02/26)",
 		"Correct Super Unyielding Spirit Cost (14/02/26)",
 		"Correct Lord Slug's Blast 2 SFX (14/02/26)",
-		"Disable Hardcoded Demo Fight Changes (14/02/26)"
+		"Disable Hardcoded Demo Fight Changes (14/02/26)",
+		"Fix Bojack Unbound Trunks Subtitles (15/02/26)"
 	};
 	private static final String[] PATCH_TIPS = {
 		"Removes any mention of Raditz's Great Ape transformation from his skill list.",
@@ -50,9 +51,10 @@ public class DxPatch {
 		+ "Without this patch, the code will replace the fights above with the fights below:<br>"
 		+ "* Bardock vs. Frieza - 1st Form<br>"
 		+ "* Teen Gohan - Super Saiyan 2 vs. Super Perfect Cell<br>"
-		+ "* Future Trunks (Sword) - Super Saiyan vs. Zangya<br>"
+		+ "* Future Trunks (Sword) - Super Saiyan vs. Zangya<br>",
+		"Sets the subtitles for Future Trunks's voice line<br>against Tien (in Bojack Unbound) to the correct ones."
 	};
-	public static final double VER_NUM = 3.3;
+	public static final double VER_NUM = 3.4;
 	public static final int NUM_PATCHES = PATCH_NAMES.length;
 	private static final int NUM_PATCH_FILES = 13;
 	
@@ -69,6 +71,7 @@ public class DxPatch {
 				case 7: iso.rebalanceA18(); break;
 				case 8: iso.fixLordSlugSounds(); break;
 				case 9: iso.disableDbzpChanges(); break;
+				case 10: iso.fixBojackUnboundSubs(); break;
 				default: break;
 			}
 			iso.writeWatermark();

@@ -109,6 +109,12 @@ public class DxIso {
 			raf.write(dragonFistParams);
 		}
 	}
+	public void fixBojackUnboundSubs() throws IOException {
+		raf.seek(9155905);
+		raf.write(59); //change offset to make the GSC param point to 5 instead of 7
+		raf.seek(9156400);
+		raf.write(7); //replace duplicate 5 in GSDT with 7 (the original value)
+	}
 	public void fixCharaRoster() throws Exception {
 		int numFilesOfPrevPatch = DxPatch.getNumPatchFiles(info, 1);
 		int numFilesOfCurrPatch = DxPatch.getNumPatchFiles(info, 2);
