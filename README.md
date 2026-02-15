@@ -24,7 +24,7 @@ been **renamed to Half-Saiyan Energy**.
 * Changes Android #18's **Super Unyielding Spirit cost from 3 Blast Stocks to 2**.
 * Replaces Lord Slug's Blast 2 sound effects with more fitting ones.
 * Prevents the game's menu code (DBZP.BIN) from **changing the characters of 3 demo fights** after the Title Screen is loaded.
-* Sets the subtitles for Future Trunks's voice line against Tien (in Bojack Unbound) to the correct ones.
+* Sets the **subtitles for Future Trunks's voice line** against Tien (in Bojack Unbound) to the **correct ones**.
 
 # Demonstration (v1.0)
 Upon execution, the user needs to **click on** the *Deelmoji* (yes, that is what I am calling it) **for a file chooser to show up**.
@@ -103,5 +103,20 @@ The tool will **only apply changes from patches checked** by the user. Future pa
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/71245f66-2a55-4f81-8f1e-6a7268410d0f" />
 
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/b160a638-93e2-40e0-aecf-8c60b64eb08d" />
+
+## Correct Super Unyielding Spirit Cost
+<img width="1284" height="683" alt="image" src="https://github.com/user-attachments/assets/00d7d7c8-5545-4143-af88-aea02e886442" />
+
+## Disable Hardcoded Demo Fight Changes
+<img width="1285" height="683" alt="image" src="https://github.com/user-attachments/assets/fa0fe004-cd69-4866-8307-2146cb353c1b" />
+
+<img width="1285" height="683" alt="image" src="https://github.com/user-attachments/assets/225eb715-13fc-43ca-933c-6c6bbd1cdc23" />
+
+<img width="1284" height="683" alt="image" src="https://github.com/user-attachments/assets/dae2f434-d511-426a-a615-2138308fa962" />
+
+## Fix Bojack Unbound Trunks Subtitles
+<img width="1284" height="683" alt="image" src="https://github.com/user-attachments/assets/4db2968b-3089-4fb4-b630-911bfd913702" />
+
+
 
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/e3d66317-f15d-4712-84eb-e60b931a3acd" />
