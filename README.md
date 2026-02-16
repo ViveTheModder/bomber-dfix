@@ -105,6 +105,8 @@ The tool will **only apply changes from patches checked** by the user. Future pa
 
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/b160a638-93e2-40e0-aecf-8c60b64eb08d" />
 
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/e3d66317-f15d-4712-84eb-e60b931a3acd" />
+
 ## Correct Super Unyielding Spirit Cost
 <img width="1284" height="683" alt="image" src="https://github.com/user-attachments/assets/00d7d7c8-5545-4143-af88-aea02e886442" />
 
@@ -121,5 +123,6 @@ The tool will **only apply changes from patches checked** by the user. Future pa
 ## Fix Family Kamehameha Ending Portraits
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/fdbffd16-0a7a-4b16-8b54-3d499c65bd84" />
 
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/a54cfa66-0dd9-4eaa-ae9b-5e034ee18a2a" />
 
-<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/e3d66317-f15d-4712-84eb-e60b931a3acd" />
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/3d412a5d-24a0-46b5-8a5c-acc8cdf2c4b9" />
