@@ -1,9 +1,9 @@
 # bomber-dfix
 A patcher for [Deelseton](https://www.youtube.com/@Deelseton)'s [DBZ BT2 DX](https://www.youtube.com/watch?v=95p83apY2LI), currently on v1.04 (the ISO, not the patcher).
 
-Similar to [the one I wrote for DBZ Sparking! HYPER](https://github.com/ViveTheModder/dbzs-hyper-patcher), though ~~without command-line support and instead~~ with more silliness (hence why it looks so unprofessional).
+Similar to [the one I wrote for DBZ Sparking! HYPER](https://github.com/ViveTheModder/dbzs-hyper-patcher), though ~~without command-line support and instead~~ with ~~more~~ less silliness (hence why it looks so **much less** unprofessional).
 
-As of v3.4, the tool performs the following:
+As of v3.7, the tool performs the following:
 * Removes **any mention of Raditz's Great Ape transformation** from his **skill list**.
 * Removes **excess space from** the Son of Paragus and Breakthrough the limit **Z-Items**,
 specifically for the **results screen of Dragon History** and the **character select in Dragon Tournament**.
@@ -25,6 +25,7 @@ been **renamed to Half-Saiyan Energy**.
 * Replaces Lord Slug's Blast 2 sound effects with more fitting ones.
 * Prevents the game's menu code (DBZP.BIN) from **changing the characters of 3 demo fights** after the Title Screen is loaded.
 * Sets the **subtitles for Future Trunks's voice line** against Tien (in Bojack Unbound) to the **correct ones**.
+* Swaps the speech portraits of Goten and Gohan for the ending scene of Broly's Second Coming.
 
 # Demonstration (v1.0)
 Upon execution, the user needs to **click on** the *Deelmoji* (yes, that is what I am calling it) **for a file chooser to show up**.
@@ -117,6 +118,8 @@ The tool will **only apply changes from patches checked** by the user. Future pa
 ## Fix Bojack Unbound Trunks Subtitles
 <img width="1284" height="683" alt="image" src="https://github.com/user-attachments/assets/4db2968b-3089-4fb4-b630-911bfd913702" />
 
+## Fix Family Kamehameha Ending Portraits
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/fdbffd16-0a7a-4b16-8b54-3d499c65bd84" />
 
 
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/e3d66317-f15d-4712-84eb-e60b931a3acd" />
