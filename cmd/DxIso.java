@@ -71,7 +71,8 @@ public class DxIso {
 	public void close() throws IOException {
 		raf.close();
 	}
-	public void disableDbzpChanges() throws Exception {
+	
+	void disableDbzpChanges() throws Exception {
 		int pos = 3324236;
 		raf.seek(pos);
 		raf.write(-3);
@@ -83,7 +84,7 @@ public class DxIso {
 		int i = DxPatch.getNumPatchFiles(info, 1) + DxPatch.getNumPatchFiles(info, 2) + DxPatch.getNumPatchFiles(info, 3);
 		writePatchFromPak(info[i].getName(), info[i].getPnum(), info[i].getAddr(), info[i].getOldSize(), info[i].getNewSize());
 	}
-	public void disableGreatApeForm() throws IOException {
+	void disableGreatApeForm() throws IOException {
 		/* As of v1.04, Turles has already had his transformation disabled, so this code is useless
 		long[] commonParamAddrs = {3034040384L, 3034939072L, 3035522048L, 3036105728L, 3036689408L, 3037273088L};
 		for (long addr: commonParamAddrs) {
@@ -101,7 +102,7 @@ public class DxIso {
 			raf.write(new byte[192]);
 		}
 	}
-	public void enableDragonFistAgainstGiants() throws Exception {
+	void enableDragonFistAgainstGiants() throws Exception {
 		byte[] dragonFistParams = {-118, 17}; //likely flags (sets of boolean parameters)
 		long[] blastParamAddrs = { 2909059877L, 2910006757L, 2910907125L };
 		for (long addr: blastParamAddrs) {
@@ -109,19 +110,19 @@ public class DxIso {
 			raf.write(dragonFistParams);
 		}
 	}
-	public void fixBojackUnboundSubs() throws IOException {
+	void fixBojackUnboundSubs() throws IOException {
 		raf.seek(9155905);
 		raf.write(59); //change offset to make the GSC param point to 5 instead of 7
 		raf.seek(9156400);
 		raf.write(7); //replace duplicate 5 in GSDT with 7 (the original value)
 	}
-	public void fixCharaRoster() throws Exception {
+	void fixCharaRoster() throws Exception {
 		int numFilesOfPrevPatch = DxPatch.getNumPatchFiles(info, 1);
 		int numFilesOfCurrPatch = DxPatch.getNumPatchFiles(info, 2);
 		for (int i = numFilesOfPrevPatch; i < numFilesOfCurrPatch + numFilesOfPrevPatch; i++)
 			writePatchFromPak(info[i].getName(), info[i].getPnum(), info[i].getAddr(), info[i].getOldSize(), info[i].getNewSize());
 	}
-	public void fixItemNames() throws Exception {
+	void fixItemNames() throws Exception {
 		String verNum = getPatchVersion();
 		//This patch conflicts with the patch from v1.2, so this check had to be added
 		if (Float.parseFloat(verNum) < 1.2) {
@@ -132,17 +133,17 @@ public class DxIso {
 		raf.seek(10682586);
 		raf.write('u');
 	}
-	public void fixLordSlugSounds() throws Exception {
+	void fixLordSlugSounds() throws Exception {
 		int start = DxPatch.getNumPatchFiles(info, 1) + DxPatch.getNumPatchFiles(info, 2);
 		int end = start + 2;
 		for (int i = start; i < end; i++)
 			writePatchFromPak(info[i].getName(), info[i].getPnum(), info[i].getAddr(), info[i].getOldSize(), info[i].getNewSize());
 	}
-	public void fixPiccoloCostume() throws IOException {
+	void fixPiccoloCostume() throws IOException {
 		raf.seek(9313732);
 		raf.write(8); //Move costume ID by 4 slots ("04 AD" -> "08 AD")
 	}
-	public void fixSpecialQuotes() throws IOException {
+	void fixSpecialQuotes() throws IOException {
 		long[] krillinAddrs = { 2385862232L, 2386705784L, 2387616056L, 2388515432L, 2389311960L, 2390190456L };
 		long[] trunksAddrs = { 
 			2811903576L, 2812789432L, 2813719512L, 2814577704L, 2815523144L, 2816430920L,
@@ -177,14 +178,14 @@ public class DxIso {
 			}
 		}
 	}
-	public void rebalanceA18() throws IOException {
+	void rebalanceA18() throws IOException {
 		long[] blastParamAddrs = { 2562378636L, 2563244204L, 2564158732L, 2564982988L, 2565958412L, 2566812012L };
 		for (long addr: blastParamAddrs) {
 			raf.seek(addr);
 			raf.write(2);
 		}
 	}
-	public void rebalanceWildSense() throws IOException {
+	void rebalanceWildSense() throws IOException {
 		long[] sklLstAddrs = {
 			//Goku (End) - Super Saiyan
 			2332219296L, 2333163456L, 2334091168L, 2335019792L, 2335951360L, 2336905920L,
@@ -212,10 +213,18 @@ public class DxIso {
 			raf.write(2);
 		}
 	}
+	void swapSpeechPortraits() throws IOException {
+		int pos = 9432617;
+		raf.seek(pos);
+		raf.write(121);
+		raf.seek(pos += 11);
+		raf.write(120);
+	}
 	void writeWatermark() throws IOException {
 		raf.seek(33651);
 		String watermark = PATCH_WATERMARK + "" + DxPatch.VER_NUM + "";
 		raf.write(watermark.getBytes());
+		raf.write(0); //when going from 3.41 to 3.7, the 1 still remains unless this is added
 		raf.close();
 	}
 	

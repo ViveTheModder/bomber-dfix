@@ -1,6 +1,7 @@
 package gui;
 //Bomber D'fiX by ViveTheJoestar
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -19,7 +20,7 @@ import cmd.DxIso;
 public class BackupHandler {
 	public static void start(DxIso iso, Image icon, JFrame prevFrame, Toolkit tk) {
 		final long[] seconds = new long[1];
-		String initText = "pls wait 4 iso copy... ";
+		String initText = "Copying ISO, please wait... ";
 		//set components
 		Box labelBox = Box.createHorizontalBox();
 		JDialog dialog = new JDialog();
@@ -56,8 +57,11 @@ public class BackupHandler {
 		});
 		//set component properties
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		label.setFont(Program.getComicSansFont());
+		label.setBackground(Program.BG_COLOR);
+		label.setForeground(Program.FG_COLOR);
+		label.setFont(new Font("Tahoma", Font.BOLD, 30));
 		label.setHorizontalAlignment(JLabel.CENTER);
+		panel.setBackground(Program.BG_COLOR);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		prevFrame.setEnabled(false);
 		//add components

@@ -1,7 +1,6 @@
 package gui;
 //Bomber D'fiX by ViveTheJoestar
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -12,7 +11,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -22,18 +21,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
 import cmd.DxIso;
 import cmd.DxPatch;
 
 public class Patcher {
-	private static final String HTML_START = "<html><div style='text-align: center;'>";
-	private static final String HTML_END = "</html></div>";
 	public static void start(DxIso iso, Image icon, JFrame prevFrame, Toolkit tk) {
 		//set components
-		Box selectAllBox = Box.createHorizontalBox();
+		Box selectAllBox = Box.createHorizontalBox(), allPatchBox = Box.createVerticalBox();
 		Color bgColor = new Color(1, 54, 106);
 		Color btnColor = new Color(150, 94, 182);
 		Color fgColor = new Color(255, 217, 1);
@@ -43,13 +40,14 @@ public class Patcher {
 		Font tahomaBold = new Font("Tahoma", Font.BOLD, 30);
 		JCheckBox selectAll = new JCheckBox("Select All");
 		JCheckBox[] chkbxs = new JCheckBox[DxPatch.NUM_PATCHES];
+		JScrollPane scroll = new JScrollPane(allPatchBox);
 		for (int patchCnt = 0; patchCnt < chkbxs.length; patchCnt++) {
 			final int index = patchCnt;
 			chkbxs[patchCnt] = new JCheckBox(DxPatch.getPatchName(patchCnt));
 			chkbxs[patchCnt].setBackground(bgColor);
 			chkbxs[patchCnt].setForeground(Color.WHITE);
 			chkbxs[patchCnt].setFont(tahoma);
-			chkbxs[patchCnt].setToolTipText(HTML_START + DxPatch.getPatchTooltip(patchCnt) + HTML_END);
+			chkbxs[patchCnt].setToolTipText(Program.HTML_START + DxPatch.getPatchTooltip(patchCnt) + Program.HTML_END);
 			chkbxs[patchCnt].addFocusListener(new FocusListener() {
 				@Override
 				public void focusGained(FocusEvent e) {
@@ -124,6 +122,8 @@ public class Patcher {
 		panel.setBackground(bgColor);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		prevFrame.setEnabled(false);
+		scroll.getViewport().setBackground(bgColor);
+		scroll.setBorder(BorderFactory.createLineBorder(bgColor));
 		selectAll.setBackground(bgColor);
 		selectAll.setForeground(fgColor);
 		selectAll.setFont(selectFont);
@@ -143,17 +143,19 @@ public class Patcher {
 			patchBox.add(Box.createHorizontalGlue());
 			patchBox.add(chkbxs[patchCnt]);
 			patchBox.add(Box.createHorizontalGlue());
-			panel.add(patchBox);
+			allPatchBox.add(patchBox);
 		}
+		panel.add(scroll);
+		panel.add(new JLabel(" "));
 		panel.add(selectAllBox);
 		panel.add(new JLabel(" "));
 		panel.add(btn);
+		panel.add(new JLabel(" "));
 		panel.add(Box.createVerticalGlue());
 		dialog.add(panel);		
 		//set dialog properties
 		dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		dialog.setIconImage(icon);
-		dialog.setMinimumSize(new Dimension(512, 512));
 		dialog.setSize(512, 512);
 		dialog.setLocation(prevFrame.getX() + 600, prevFrame.getY());
 		dialog.setTitle(Program.WINDOW_TITLE);
