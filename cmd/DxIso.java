@@ -217,7 +217,7 @@ public class DxIso {
 		int pos = 9432617;
 		raf.seek(pos);
 		raf.write(121);
-		raf.seek(pos += 11);
+		raf.seek(pos += 12);
 		raf.write(120);
 	}
 	void writeWatermark() throws IOException {
