@@ -15,7 +15,7 @@ public class DxPatch {
 		"Fix Invalid Costume for Piccolo in Buu Saga (11/02/26)",
 		"Enable Giant-Piercing Ability for GT Goku Dragon Fist (11/02/26)",
 		"Correct Wild Sense Cost (12/02/26)",
-		"Fix Missing Special Quote Voice Lines (12/02/26, 14/02/26)",
+		"Fix Missing Special Quote Voice Lines (12/02/26, 14/02/26, 11/03/26)",
 		"Correct Super Unyielding Spirit Cost (14/02/26)",
 		"Correct Lord Slug's Blast 2 SFX (14/02/26)",
 		"Disable Hardcoded Demo Fight Changes (14/02/26)",
@@ -41,8 +41,9 @@ public class DxPatch {
 		+ "* Ultimate Gohan<br>"
 		+ "* Gogeta (GT) - Super Saiyan 4<br>"
 		+ "* Omega Shenron",
-		"Restores Krillin, Perfect Cell and Syn/Omega Shenron's missing interaction<br>"
-		+ "voice lines against Vegeta (Early), Future Trunks and Goku (GT).",
+		"Restores Krillin, Perfect Cell, Syn/Omega Shenron and Bojack's missing interaction<br>"
+		+ "voice lines against Vegeta (Early), Future Trunks, Goku (GT), Tien and Yamcha.<br>"
+		+ "Also disables Nappa's unintentional Special Quote against Future Gohan.",
 		"Changes Android #18's Super Unyielding Spirit cost from 3 Blast Stocks to 2.",
 		"Replaces Lord Slug's Blast 2 sound effects with more fitting ones.",
 		"Prevents the game's menu code (DBZP.BIN) from changing the characters of the following fights:<br>"
@@ -56,7 +57,7 @@ public class DxPatch {
 		"Sets the subtitles for Future Trunks's voice line<br>against Tien (in Bojack Unbound) to the correct ones.",
 		"Swaps the speech portraits of Goten and Gohan<br>for the ending scene of Broly's Second Coming."
 	};
-	public static final double VER_NUM = 3.7;
+	public static final double VER_NUM = 3.8;
 	public static final int NUM_PATCHES = PATCH_NAMES.length;
 	private static final int NUM_PATCH_FILES = 13;
 	

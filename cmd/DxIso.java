@@ -150,15 +150,38 @@ public class DxIso {
 			2818707656L, 2819607432L, 2820533768L, 2821349992L, 2822262664L, 2823158920L
 		};
 		long[] cellAddrs = { 2590651480L, 2591476824L, 2595587160L, 2596407496L };
-		long[] synAddrs = { 3011043024L, 3011952336L, 3016700112L, 3017621712L }; 
+		long[] synAddrs = { 3011043024L, 3011952336L, 3016700112L, 3017621712L };
+		long[] nappaAddrs = { 2423287320L, 2424140088L, 2424977464L, 2425761336L, 2426737064L, 2427624632L };
+		long[] bojackAddrs = { 2758556240L, 2759436880L, 2937100560L, 2938030352L };
 		byte[] krillinSpeakerParams = { 0x59, 0, 1, 0 };
 		byte[] trunksSpeakerParams = { 0x5B, 0, 0, 0};
-		byte[] cellSpeakerParams = { 8, 0, 1, 0 }; 
-		int totalNumAddrs = krillinAddrs.length + trunksAddrs.length + cellAddrs.length + synAddrs.length;
-		int startIndexSyn = krillinAddrs.length + trunksAddrs.length + cellAddrs.length;
+		byte[] cellSpeakerParams = { 8, 0, 1, 0 };
+		byte[] bojackSpeakerParams = { 4, 0, 0, 0, -1, -1, 0, 0 };
+		byte[] disabledQuotes = new byte[16];
+		//Set bytes for disabled interaction params
+		for (int i = 0; i < 16; i++) {
+			if (i % 4 == 0) { //Disable voice line by setting the voice line ID to -1 (or 65535)
+				disabledQuotes[i] = -1;
+				disabledQuotes[i + 1] = -1;
+			}
+		}
+		int totalNumAddrs = krillinAddrs.length + trunksAddrs.length + 
+		cellAddrs.length + synAddrs.length + nappaAddrs.length + bojackAddrs.length;
 		int startIndexCell = krillinAddrs.length + trunksAddrs.length;
+		int startIndexSyn = startIndexCell + cellAddrs.length;
+		int startIndexNappa = startIndexSyn + synAddrs.length;
+		int startIndexBojack = startIndexNappa + nappaAddrs.length;
 		for (int i = 0; i < totalNumAddrs; i++) {
-			if (i >= startIndexSyn) {
+			if (i >= startIndexBojack) {
+				raf.seek(bojackAddrs[i - startIndexBojack]);
+				raf.write(bojackSpeakerParams);
+				raf.write(bojackSpeakerParams);
+			}
+			if (i >= startIndexNappa) {
+				raf.seek(nappaAddrs[(i - startIndexNappa) % nappaAddrs.length]);
+				raf.write(disabledQuotes);
+			}
+			else if (i >= startIndexSyn) {
 				raf.seek(synAddrs[i - startIndexSyn]);
 				raf.write(new byte[6]);
 			}

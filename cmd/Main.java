@@ -5,7 +5,7 @@ import gui.Program;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		String helpText = "USAGE: java -jar bomber-dfix-v3.0.jar [path-to-iso] [arg]\n"
+		String helpText = "USAGE: java -jar bomber-dfix-v" + DxPatch.VER_NUM + ".jar [path-to-iso] [arg]\n"
 		+ "Replace [arg] with either -a (to apply all patches) or one of the numbers below:\n";
 		String patchText = "";
 		for (int patchCnt = 0; patchCnt < DxPatch.NUM_PATCHES; patchCnt++) {
