@@ -3,7 +3,7 @@ A patcher for [Deelseton](https://www.youtube.com/@Deelseton)'s [DBZ BT2 DX](htt
 
 Similar to [the one I wrote for DBZ Sparking! HYPER](https://github.com/ViveTheModder/dbzs-hyper-patcher), though ~~without command-line support and instead~~ with ~~more~~ less silliness (hence why it looks so **much less** unprofessional).
 
-As of v3.7, the tool performs the following:
+As of v3.8, the tool performs the following:
 * Removes **any mention of Raditz's Great Ape transformation** from his **skill list**.
 * Removes **excess space from** the Son of Paragus and Breakthrough the limit **Z-Items**,
 specifically for the **results screen of Dragon History** and the **character select in Dragon Tournament**.
@@ -20,12 +20,13 @@ been **renamed to Half-Saiyan Energy**.
 * Instead of the early damaged costume (no. 6), Piccolo will use **his 2nd costume** (the one **with the cape**).
 * Makes GT Goku's Dragon Fist (base form) **able to work against giant characters**.
 * Changes the cost of **Wild Sense from 3 to 2 Blast Stocks** for Goku (End) - Super Saiyan, Ultimate Gohan, Gogeta (GT) - Super Saiyan 4, Omega Shenron.
-* Restores Krillin, Perfect Cell and Syn/Omega Shenron's **missing interaction voice lines** against Vegeta (Early), Future Trunks and Goku (GT).
+* Restores Krillin, Perfect Cell, Syn/Omega Shenron and Bojack's **missing interaction voice lines** against Vegeta (Early), Future Trunks, Goku (GT), Tien and Yamcha.
+* Disables Nappa's **interaction voice line** against Future Gohan (who replaces second form Vegeta).
 * Changes Android #18's **Super Unyielding Spirit cost from 3 Blast Stocks to 2**.
 * Replaces Lord Slug's Blast 2 sound effects with more fitting ones.
 * Prevents the game's menu code (DBZP.BIN) from **changing the characters of 3 demo fights** after the Title Screen is loaded.
 * Sets the **subtitles for Future Trunks's voice line** against Tien (in Bojack Unbound) to the **correct ones**.
-* Swaps the speech portraits of Goten and Gohan for the ending scene of Broly's Second Coming.
+* Swaps the **speech portraits of Goten and Gohan** for the ending scene of Broly's Second Coming.
 
 # Demonstration (v1.0)
 Upon execution, the user needs to **click on** the *Deelmoji* (yes, that is what I am calling it) **for a file chooser to show up**.
